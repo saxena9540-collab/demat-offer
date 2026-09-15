@@ -50,7 +50,8 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxucdyqI8dflDUIYUarpd7OHVzM0fUe2OG0e-_e6YBJMqxN3G6q3H32kUNLVrVNin-lg/exec";
     let activeLink = "https://google.com";
 
-    fetch(SCRIPT_URL + "?action=getOffer")
+    fetch(SCRIPT_URL + "?action=getOffer&t=" + new Date().getTime(), { cache: "no-store" })
+      
       .then(res => res.json())
       .then(data => {
         if(data.name) document.getElementById('brandName').innerText = data.name;
